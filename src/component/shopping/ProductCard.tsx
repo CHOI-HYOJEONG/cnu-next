@@ -1,78 +1,54 @@
-import Image from "next/image";
-import { useState } from "react";
+// ProductCartPage.tsx
+import { useEffect, useState } from "react";
+import ProductList from "./ProductList";
 import { ProductItem } from "@/types/Product";
+import CartList from "./CartList";
 
-interface Props {
-  item: ProductItem;
-  onAddToCart: (item: ProductItem, quantity: number) => void;
-}
+export default function ProductCart({ items }: { items: ProductItem[] }) {
+  const [cart, setCart] = useState<{ [id: string]: number }>({}); // {"88159814281" : 1}
+  const [showCart, setShowCart] = useState(false); //  과제 2.1
 
-export default function ProductCard({ item, onAddToCart }: Props) {
-  const [quantity, setQuantity] = useState(1);
+  //  카트에 담기
 
+  useEffect(() => {
+    const hasItems = Object.keys(cart).length > 0;
+    setShowCart(hasItems);
+  }, [cart]);
+
+  const handleAddToCart = (item: ProductItem, quantity: number) => {
+    setCart((prev) => ({
+      ...prev,
+      [item.productId]: quantity,
+    }));
+
+    localStorage.setItem(item.productId, quantity + "");
+    localStorage.getItem(item.productId);
+  };
+
+  /* 과제 2-3: Cart 아이템 지우기 */
+  const handleRemoveFromCart = (productId: string) => {
+    setCart((prev) => {
+      const cartEntries = Object.entries(prev);
+      const filteredEntries = cartEntries.filter(
+        ([key, value]) => key !== productId
+      );
+      const newCart = Object.fromEntries(filteredEntries);
+
+      return newCart;
+    });
+
+    localStorage.removeItem(productId);
+  };
+  
   return (
-    <li className="flex items-start gap-4 border border-gray-200 rounded-lg shadow-sm p-4 bg-white">
-      <div className="flex-shrink-0">
-        <Image
-          src={item.image}
-          alt={item.title}
-          width={120}
-          height={120}
-          className="rounded object-contain"
-        />
-      </div>
-      <div className="flex flex-col justify-between flex-grow">
-        <div>
-          <h2
-            className="font-bold text-lg"
-            dangerouslySetInnerHTML={{ __html: item.title }}
-          />
-          <p className="text-sm text-gray-600 mt-1">
-            {item.brand} / {item.maker}
-          </p>
-          <p className="text-sm text-gray-500">{item.mallName}</p>
-          <p className="text-red-500 font-bold mt-2">
-            {Number(item.lprice).toLocaleString()}원
-          </p>
-          <p className="text-xs text-gray-400 mt-1">
-            카테고리:{" "}
-            {[item.category1, item.category2, item.category3]
-              .filter(Boolean)
-              .join(" > ")}
-          </p>
-          {/* 수량 조절 UI */}
-          <div className="flex items-center gap-2 mt-2">
-            <button
-              className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-              onClick={() => setQuantity((q) => Math.max(1, q - 1))} //  **수량(quantity)**을 감소시키되, 최소값이 1이 되도록 제한
-            >
-              -
-            </button>
-            <span>{quantity}</span>
-            <button
-              className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-              onClick={() => setQuantity((q) => q + 1)}
-            >
-              +
-            </button>
-
-            <button
-              onClick={() => onAddToCart(item, quantity)}
-              className="ml-2 bg-blue-500 text-white px-2 py-1 rounded"
-            >
-              담기
-            </button>
-          </div>
-        </div>
-        <a
-          href={item.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-3 text-sm text-blue-600 underline"
-        >
-          상세 보기
-        </a>
-      </div>
-    </li>
+    <div className="p-10">
+      {/* 상품 리스트 */}
+      <ProductList items={items} onAddToCart={handleAddToCart} />
+      {/* 장바구니 */}
+      {/* 2.1. 조건부 카트 보이기: 카트에 담긴 상품이 없으면 카트가 보이지 않고, 카트에 담긴 물건이 있으면 카트가 보인다 */}
+      {showCart && (
+        <CartList cart={cart} products={items} onRemove={handleRemoveFromCart} />
+      )}
+    </div>
   );
 }
