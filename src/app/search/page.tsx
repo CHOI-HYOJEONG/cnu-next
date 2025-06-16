@@ -15,9 +15,9 @@ export default function SearchHome() {
   useEffect(() => {
     //  학번 + 이름 형태로 작성 (ex. 2025***** 내이름 )
     setUser({
-      userId: "202102693 장성근",
-      name: "jangseonggeun",
-      age: 24,
+      userId: "202302632 최효정",
+      name: "choihyojeong",
+      age: 26,
       phoneNumber: "010-1234-5678",
     });
   }, []);
