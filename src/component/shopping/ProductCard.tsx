@@ -20,7 +20,6 @@ export default function ProductCart({ items }: { items: ProductItem[] }) {
       ...prev,
       [item.productId]: quantity,
     }));
-
     localStorage.setItem(item.productId, quantity + "");
     localStorage.getItem(item.productId);
   };
@@ -39,7 +38,7 @@ export default function ProductCart({ items }: { items: ProductItem[] }) {
 
     localStorage.removeItem(productId);
   };
-  
+
   return (
     <div className="p-10">
       {/* 상품 리스트 */}
