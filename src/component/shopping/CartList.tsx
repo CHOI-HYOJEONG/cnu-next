@@ -28,7 +28,7 @@ export default function CartList({ cart, products, onRemove }: Props) {
 
     router.push("/checkout");
   };
-  
+
   return (
     <div className="p-4 bg-white rounded shadow mt-6">
       <h2 className="text-xl font-bold mb-4">🛒 장바구니</h2>
