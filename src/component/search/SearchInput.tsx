@@ -11,7 +11,7 @@ export default function SearchInput() {
       inputRef.current.focus();
     }
   }, []);
-  
+
   // 검색 기능
   const search = async () => {
     try {
@@ -19,6 +19,8 @@ export default function SearchInput() {
       if (!res.ok) throw new Error(`${res.status} 에러 발생`);
 
       const data = await res.json();
+      console.log("검색 결과:", data.items);
+      setResult(data.items || []);
     } catch (error) {
       alert(error);
       setResult([]);
@@ -29,6 +31,7 @@ export default function SearchInput() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
   };
+
   // 과제 1-2-3: 페이지 최초 렌더링 시, input에 포커스 되는 기능 (useRef)
 
   return (
