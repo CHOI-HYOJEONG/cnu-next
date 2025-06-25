@@ -60,7 +60,6 @@ export default function CheckoutPage() {
       ) : (
         <p className="text-center text-gray-500 py-10">결제된 아이템이 없습니다.</p>
       )}
-      
       {/* 3.2. 홈으로 가기 버튼 구현 */}
       <div className="mt-8 text-center">
         <Link href="/">
